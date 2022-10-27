@@ -2,7 +2,10 @@
 Implementation of pipe-based function chaining syntax
 
 ## Background 
-Please see this thread: https://scsynth.org/t/function-chaining-operators-opinions-thoughts-do-you-like-this-a-big-hopefully-discursive-post/6627
+Please see this thread: 
+
+https://scsynth.org/t/function-chaining-operators-opinions-thoughts-do-you-like-this-a-big-hopefully-discursive-post/6627
+
 The following is an abridged version of the above link.
 
 ## What it is
