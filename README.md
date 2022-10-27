@@ -11,7 +11,7 @@ Two operators: `|>` and `<|`
 ## Forward chaining: `|>` operator
 A way of chaining function calls together. Here, each _ becomes the result of the previous expression.
 
-### With ugens
+### With UGens
 ```SuperCollider
 SinOsc.ar(440) |> LPF.ar(_, \lpf.kr(15000)) |> HPF.ar(_, \hpf.kr(20)) 
 |> Out.ar(\out.kr(0), _);
@@ -38,7 +38,7 @@ Executed from the right to the left.
 // returns : g f h -> 3
 ```
 
-### With Ugens
+### With UGens
 ```SuperCollider
 Out.ar(\out.kr(0), _) <| HPF.ar(_, \hpf.kr(20)) <| LPF.ar(_, \lpf.kr(15000)) <| SinOsc.ar(440)
 ```
