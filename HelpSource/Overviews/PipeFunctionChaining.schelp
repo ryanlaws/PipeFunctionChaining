@@ -1,0 +1,76 @@
+title:: Pipe-based function chaining syntax
+categories:: Libraries>PipeFunctionChaining
+summary:: Implementation of pipe-based function chaining syntax
+
+section::  What it is
+Two operators: |> and <|
+
+section:: Forward chaining: |> operator
+A way of chaining function calls together. Here, each _ becomes the result of the previous expression.
+
+With UGens
+code::
+SinOsc.ar(440) |> LPF.ar(_, \lpf.kr(15000)) |> HPF.ar(_, \hpf.kr(20)) 
+|> Out.ar(\out.kr(0), _);
+::
+A sine wave that is filtered by a low pass, then high pass, then outputted.
+
+With functions
+code::
+~f = {|i|  "f".postln; i + 1; };
+~g = {|i|  "g".postln; i * 2; };
+~h = {|i|  "h".postln; i - 2; };
+
+2 |> ~g |> ~f |> ~h;
+
+// returns : g f h -> 3
+::
+
+section:: Backward chaining: <| operator
+Executed from the right to the left.
+
+With functions
+code::
+~h <| ~f <| ~g <| 2
+// returns : g f h -> 3
+::
+
+With UGens
+code::
+Out.ar(\out.kr(0), _) <| HPF.ar(_, \hpf.kr(20)) <| LPF.ar(_, \lpf.kr(15000)) <| SinOsc.ar(440)
+::
+
+section:: Gotchas
+It can get weird - the following is valid.
+code::
+~f = {|i|  "f".postln; i + 1; };
+~g = {|i|  "g".postln; i * 2; };
+~h = {|i|  "h".postln; i - 2; };
+
+~f <| ( ~g <| 1 |> ~h |> ~g ) |> ~h
+// These are equivalent
+(1 |> ~g |> ~h |> ~g |> ~f |> ~h)
+::
+
+section:: Brackets
+For forward chaining, you need to add brackets around each function
+code::
+1 |> (_ + 1) |> (_ * 2); // works
+1 |> _ + 1 |> _ * 2; // does not
+::
+
+It gets weirder with backwards…
+code::
+_ * 2 <|  _ + 1 <| 1 // this will evaluate, but returns the wrong result.
+(_ * 2) <| ( _ + 1) <| 1 // correct
+::
+However this mostly goes away if you call messages with a . on the underscore.
+
+section:: Multi-arity functions are messy.
+code::
+-1 |> (_.neg) |> (_ * 3.5) |> { |r| 
+	2 |> (_.sin) |> { |two|
+		4 |> _.pow(two) |> _.round(r)
+	}
+}
+::
